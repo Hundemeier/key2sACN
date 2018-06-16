@@ -1,82 +1,43 @@
 package main
 
 import (
-	"flag"
-	"log"
-	"math/rand"
-	"time"
-
-	"github.com/Hundemeier/go-sacn/sacn"
+	"fmt"
+	"net/http"
+	"os"
+	"os/signal"
 )
 
-//KeyEvent is an abstract event for storing the events information
-//If Value is 1 then this is a DOWN event, 0 is UP and 2 is REPEATED
-type KeyEvent struct {
-	Code  uint16
-	Value int32
-}
+var keyChan = make(chan KeyEvent)
 
 func main() {
-	multicast := flag.Bool("multicast", true,
-		"set wether multicast should be used for sending out the sACN packets")
-	universe := flag.Uint("universe", 1, "the sACn universe to use")
-	verbose := flag.Bool("verbose", false, "enables output of more information while a key was pressed")
-	destination := flag.String("destination", "", "Set the unicast destination")
+	fmt.Println("Reading config file")
+	conf := readConfig()
+	fmt.Println("Starting...")
 
-	flag.Parse()
+	initSacn(conf)
+	initKeylogger(conf)
+	initMapping(conf)
 
-	if *universe > 65535 {
-		log.Fatalf("The given universe of %v is too high!", *universe)
-	}
-
-	log.Println("Starting Keylogger...")
-	in := getKeylogger()
-
-	log.Println("Starting sACN...")
-	cid := [16]byte{}
-	rand.Seed(int64(time.Now().Nanosecond()))
-	for i := range cid {
-		//make the CID random:
-		cid[i] = byte(rand.Int())
-	}
-	trans, err := sacn.NewTransmitter("", cid, "key2sACN")
-	logErr(err)
-	trans.SetMulticast(uint16(*universe), *multicast)
-	errs := trans.SetDestinations(uint16(*universe), []string{*destination})
-	for _, v := range errs {
-		logErr(v)
-	}
-	sacn, err := trans.Activate(uint16(*universe))
-	logErr(err)
-
-	log.Println("Quit with Ctrl+C. Listening for keys...")
-	if *verbose {
-		log.Println("<keyCode> <state> -> <DMX channel> <DMX value>")
-	}
-	data := [512]byte{}
-	for i := range in {
-		//check if we have a key down or up
-		if i.Value == 1 {
-			//Key down
-			data[i.Code] = 255
-			sacn <- data
-			if *verbose {
-				log.Printf("%v DOWN -> %v 100%%", i.Code+1, i.Code+1)
-			}
-		} else if i.Value == 0 {
-			//Key UP
-			data[i.Code] = 0
-			sacn <- data
-			if *verbose {
-				log.Printf("%v UP   -> %v 0%%", i.Code+1, i.Code+1)
-			}
+	//Start the listener for all keys that sends the events via sACN:
+	go func() {
+		for event := range keyChan {
+			//fmt.Println(event)
+			sendViaMap(event)
 		}
+	}()
 
+	fmt.Println("Init grapqhl...")
+	initGraphql()
+	server := http.Server{
+		Addr: ":8080",
 	}
-}
+	go server.ListenAndServe()
 
-func logErr(err error) {
-	if err != nil {
-		log.Fatal(err)
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, os.Interrupt)
+	for _ = range c {
+		err := writeConfig()
+		logErr(err)
+		os.Exit(0)
 	}
 }
