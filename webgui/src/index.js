@@ -6,3 +6,20 @@ import registerServiceWorker from './registerServiceWorker';
 
 ReactDOM.render(<App />, document.getElementById('root'));
 registerServiceWorker();
+
+
+
+/*
+client
+  .query({
+    query: gql`
+    {
+        Devices {
+          id
+          listening
+          name
+        }
+      }
+    `
+  })
+  .then(result => console.log(result));*/

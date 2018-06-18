@@ -177,7 +177,7 @@ func initGraphql() {
 			"setListening": &graphql.Field{
 				Type: deviceType,
 				Description: `set wether to listen on the given device or not. Set the device id and 
-				true to start listening. If the listening was stopped, the return value is null.`,
+				true to start listening. If the listening was stopped, the return value is null. Stoping may take up to one second.`,
 				Args: graphql.FieldConfigArgument{
 					"deviceID": &graphql.ArgumentConfig{
 						Type:        graphql.NewNonNull(graphql.Int),
@@ -198,6 +198,13 @@ func initGraphql() {
 				true will be returned, otherwise an error will be returned and false. It is
 				recommended to call this separately and not together with other mutations.`,
 				Resolve: mutateWriteConfig,
+			},
+			"deleteConfig": &graphql.Field{
+				Type: graphql.Boolean,
+				Description: `when this gets called, the current config will be deleted. If no 
+				error occurred, the return value will be true, otherwise false and the error will 
+				be filled.`,
+				Resolve: mutateDeleteConfig,
 			},
 		},
 	})

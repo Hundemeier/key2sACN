@@ -3,8 +3,6 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"os"
-	"os/signal"
 )
 
 var keyChan = make(chan KeyEvent)
@@ -31,13 +29,5 @@ func main() {
 	server := http.Server{
 		Addr: ":8080",
 	}
-	go server.ListenAndServe()
-
-	c := make(chan os.Signal, 1)
-	signal.Notify(c, os.Interrupt)
-	for _ = range c {
-		err := writeConfig()
-		logErr(err)
-		os.Exit(0)
-	}
+	server.ListenAndServe()
 }

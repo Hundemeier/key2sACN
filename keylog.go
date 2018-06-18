@@ -1,6 +1,8 @@
 package main
 
-import "github.com/Hundemeier/key2sACNraspy/keylogger"
+import (
+	"github.com/Hundemeier/key2sACNraspy/keylogger"
+)
 
 //KeyEvent is an abstract event for storing the events information
 //If Value is 1 then this is a DOWN event, 0 is UP and 2 is REPEATED

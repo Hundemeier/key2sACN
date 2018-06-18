@@ -10,6 +10,7 @@ import (
 	"os"
 	"os/user"
 	"strings"
+	"time"
 )
 
 func NewDevices() ([]*InputDevice, error) {
@@ -69,7 +70,12 @@ func NewKeyLogger(dev *InputDevice) *KeyLogger {
 
 //Stop stops a current
 func (t *KeyLogger) Stop() {
-	close(t.stopChan)
+	select {
+	case <-t.stopChan:
+		return //already closed
+	default:
+		close(t.stopChan)
+	}
 }
 
 func (t *KeyLogger) Read() (chan InputEvent, error) {
@@ -90,18 +96,18 @@ func (t *KeyLogger) Read() (chan InputEvent, error) {
 
 		tmp := make([]byte, eventsize)
 		event := InputEvent{}
+	Loop:
 		for {
 			select {
 			case <-t.stopChan:
 				close(ret)
-				break
+				break Loop
 			default:
 			}
+			fd.SetDeadline(time.Now().Add(1 * time.Second))
 			n, err := fd.Read(tmp)
 			if err != nil {
-				//panic(err)
-				close(ret)
-				break
+				continue
 			}
 			if n <= 0 {
 				continue

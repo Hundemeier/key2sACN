@@ -60,3 +60,8 @@ func readConfig() (conf config) {
 	json.Unmarshal(file, &conf)
 	return
 }
+
+func deleteConfig() (err error) {
+	err = os.Remove(configFile)
+	return
+}

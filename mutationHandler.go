@@ -108,3 +108,11 @@ func mutateWriteConfig(p graphql.ResolveParams) (interface{}, error) {
 	}
 	return false, err
 }
+
+func mutateDeleteConfig(p graphql.ResolveParams) (interface{}, error) {
+	err := deleteConfig()
+	if err == nil {
+		return true, nil
+	}
+	return false, err
+}
