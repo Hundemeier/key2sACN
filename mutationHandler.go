@@ -116,3 +116,10 @@ func mutateDeleteConfig(p graphql.ResolveParams) (interface{}, error) {
 	}
 	return false, err
 }
+
+func mutateDeleteKeyMap(p graphql.ResolveParams) (interface{}, error) {
+	keycode := p.Args["keycode"].(int)
+	keyboardID := p.Args["keyboardID"].(int)
+	ok := deleteMapping(uint16(keycode), keyboardID)
+	return ok, nil
+}

@@ -49,6 +49,18 @@ func setMapping(universe uint16, channel uint16, keycode uint16, keyboard int) m
 	return convertToMapType(key, dmx)
 }
 
+func deleteMapping(keycode uint16, keyboardID int) bool {
+	key := Key{
+		Key:        keycode,
+		KeyboardID: keyboardID,
+	}
+	if _, ok := keyMap[key]; !ok {
+		return false
+	}
+	delete(keyMap, key)
+	return true
+}
+
 func convertToMapType(key Key, dmx DMXAddress) mapType {
 	return mapType{
 		Universe:   dmx.Universe,

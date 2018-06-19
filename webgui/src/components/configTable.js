@@ -6,7 +6,7 @@ import { writeConfig, deleteConfig } from './mutations';
 function ConfigCard() {
   return (
     <div class="card text-white border-secondary" style={{ width: cardWidthREM + "rem" }}>
-      <div class="card-header">Configuration <small class="text-muted">Server-side</small></div>
+      <div class="card-header">Configuration <div class="text-muted">Server-side</div></div>
       <div class="row m-2">
         <Mutation mutation={writeConfig} >
           {(writeConf, { data }) => (

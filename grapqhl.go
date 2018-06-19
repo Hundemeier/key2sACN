@@ -174,6 +174,21 @@ func initGraphql() {
 				},
 				Resolve: mutateKeyMap,
 			},
+			"deleteKeyMap": &graphql.Field{
+				Type:        graphql.Boolean,
+				Description: "Deletes the KeyMap with the given keycode and keyboardID. Returns true if the delete was successful, otherwise false. (eg if no such KeyMap exists)",
+				Args: graphql.FieldConfigArgument{
+					"keycode": &graphql.ArgumentConfig{
+						Type:        graphql.NewNonNull(graphql.Int),
+						Description: "the keycode of the delete KeyMap",
+					},
+					"keyboardID": &graphql.ArgumentConfig{
+						Type:        graphql.NewNonNull(graphql.Int),
+						Description: "the keyboardID of the delete KeyMap",
+					},
+				},
+				Resolve: mutateDeleteKeyMap,
+			},
 			"setListening": &graphql.Field{
 				Type: deviceType,
 				Description: `set wether to listen on the given device or not. Set the device id and 

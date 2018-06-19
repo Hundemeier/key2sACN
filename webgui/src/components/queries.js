@@ -17,3 +17,13 @@ export const getSacn = gql`
     destinations
   }
 }`;
+
+export const getMapping = gql`
+{
+  Mapping{
+    universe
+    channel
+    keyboardID
+    keycode
+  }
+}`;

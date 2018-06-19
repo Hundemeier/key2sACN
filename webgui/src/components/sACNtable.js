@@ -1,7 +1,8 @@
 import React from 'react';
-import { Query } from 'react-apollo';
+import { Query, Mutation } from 'react-apollo';
 import { getSacn } from './queries';
 import { cardWidthREM } from './constants';
+import { stopSacn } from './mutations';
 
 
 function SacnTable(props) {
@@ -12,6 +13,7 @@ function SacnTable(props) {
           <th>Universe</th>
           <th>Multicast</th>
           <th>Destinations</th>
+          <th>Stop</th>
         </tr>
       </thead>
       <tbody>
@@ -29,6 +31,18 @@ function SacnItem(props) {
       <td>
       <SacnDestination destinations={props.sACN.destinations} />
       </td>
+      <td>
+        <Mutation mutation={stopSacn}>
+        {(stopSacn, {data}) => (
+          <button class="btn btn-outline-secondary btn-sm" onClick={e => {
+            e.preventDefault();
+            stopSacn({variables: {
+              "universe": props.sACN.universe
+            }})
+          }} >Stop</button>
+        )}
+          </Mutation>
+        </td>
     </tr>
   );
 }
@@ -36,7 +50,7 @@ function SacnItem(props) {
 function SacnDestination(props) {
   return (
     <ul class="list-group">
-      {props.destinations.map((dest) => <li class="list-item-destination" key={dest}>{dest}</li>)}
+      { props.destinations.map((dest) => <li class="list-item-destination" key={dest}>{dest}</li>)}
     </ul>
   );
 }

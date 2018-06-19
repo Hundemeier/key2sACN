@@ -8,6 +8,9 @@ import SacnCard from './components/sACNtable';
 import { ApolloProvider } from "react-apollo";
 import ApolloClient from "apollo-boost";
 import ConfigCard from './components/configTable';
+import SacnConfig from './components/sACNconfigurator';
+import MapCard, { KeyCodes } from './components/mappingTable';
+import { MapConfig } from './components/mapConfig';
 
 const client = new ApolloClient({
   uri: "/graphql"
@@ -18,9 +21,15 @@ class App extends React.Component {
     return (
       <ApolloProvider client={client}>
         <Clock />
-        <SacnCard />
-        <DeviceCard />
-        <ConfigCard />
+        <div class="row">
+          <SacnCard />
+          <DeviceCard />
+          <ConfigCard />
+          <SacnConfig />
+          <MapCard />
+          <MapConfig />
+          <KeyCodes />
+        </div>
       </ApolloProvider>
     );
   }
