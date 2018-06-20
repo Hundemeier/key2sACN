@@ -7,9 +7,9 @@ import (
 //KeyEvent is an abstract event for storing the events information
 //If Value is 1 then this is a DOWN event, 0 is UP and 2 is REPEATED
 type KeyEvent struct {
-	DeviceID int
-	Code     uint16
-	Value    int32
+	KeyboardID int
+	KeyCode    uint16
+	Value      int32
 }
 
 //listening stores wether or not on a given device id is being listened
@@ -50,11 +50,12 @@ func startKeylogger(device *keylogger.InputDevice, ch chan KeyEvent) (err error)
 			for i := range in {
 				if i.Type == keylogger.EV_KEY {
 					event := KeyEvent{
-						DeviceID: device.Id,
-						Code:     i.Code,
-						Value:    i.Value,
+						KeyboardID: device.Id,
+						KeyCode:    i.Code,
+						Value:      i.Value,
 					}
 					ch <- event
+					setEvent(KEY_EVENT, "", event)
 				}
 			}
 			listening[device.Id] = false

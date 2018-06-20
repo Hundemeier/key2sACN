@@ -78,7 +78,7 @@ func (t *KeyLogger) Stop() {
 	}
 }
 
-func (t *KeyLogger) Read() (chan InputEvent, error) {
+func (t *KeyLogger) Read() (<-chan InputEvent, error) {
 	ret := make(chan InputEvent, 512)
 
 	if err := checkRoot(); err != nil {
@@ -107,6 +107,10 @@ func (t *KeyLogger) Read() (chan InputEvent, error) {
 			fd.SetDeadline(time.Now().Add(1 * time.Second))
 			n, err := fd.Read(tmp)
 			if err != nil {
+				if strings.Contains(err.Error(), "no such device") {
+					close(ret)
+					break Loop
+				}
 				continue
 			}
 			if n <= 0 {
@@ -114,7 +118,6 @@ func (t *KeyLogger) Read() (chan InputEvent, error) {
 			}
 
 			if err := binary.Read(bytes.NewBuffer(tmp), binary.LittleEndian, &event); err != nil {
-				//panic(err)
 				continue
 			}
 

@@ -50,7 +50,7 @@ function SacnItem(props) {
 function SacnDestination(props) {
   return (
     <ul class="list-group">
-      { props.destinations.map((dest) => <li class="list-item-destination" key={dest}>{dest}</li>)}
+      { props.destinations.map((dest) => <li class="list-item-no-dot" key={dest}>{dest}</li>)}
     </ul>
   );
 }

@@ -11,6 +11,7 @@ import ConfigCard from './components/configTable';
 import SacnConfig from './components/sACNconfigurator';
 import MapCard, { KeyCodes } from './components/mappingTable';
 import { MapConfig } from './components/mapConfig';
+import WebsocketCard from './components/websocket';
 
 const client = new ApolloClient({
   uri: "/graphql"
@@ -29,6 +30,7 @@ class App extends React.Component {
           <MapCard />
           <MapConfig />
           <KeyCodes />
+          <WebsocketCard />
         </div>
       </ApolloProvider>
     );

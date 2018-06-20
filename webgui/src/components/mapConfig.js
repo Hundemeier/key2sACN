@@ -2,6 +2,7 @@ import React from 'react';
 import { Mutation } from 'react-apollo';
 import { setMapping } from './mutations';
 import { cardWidthREM } from './constants';
+import { keyMap } from './mappingTable';
 
 export class MapConfig extends React.Component {
   constructor(props) {
@@ -33,7 +34,7 @@ export class MapConfig extends React.Component {
           <form id="form">
             <div className="form-row">
                 <div class="form-group">
-                  <label htmlFor="keycode">KeyCode</label>
+                  <label htmlFor="keycode">KeyCode <small class="text-primary">{keyMap[this.state.keycode]}</small></label>
                   <input class="form-control" type="number" name="keycode" min="0" max="65535" id="keycode" value={this.state.keycode} onChange={this.handleInputChange} />
                 </div>
                   <div class="form-group">

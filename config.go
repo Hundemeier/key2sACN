@@ -20,7 +20,16 @@ type sACNconf struct {
 	Destinations []string
 }
 
-func writeConfig() error {
+func writeConfig() (err error) {
+	//function for reporting an error or success on terminating the function
+	defer func() {
+		if err != nil {
+			setEvent(CONFIG_WROTE, err.Error(), false)
+		} else {
+			setEvent(CONFIG_WROTE, "", true)
+		}
+	}()
+
 	//get the sACN outputs that are currently active
 	sACNlist := make([]sACNconf, 0)
 	for _, univ := range trans.GetActivated() {
@@ -39,15 +48,16 @@ func writeConfig() error {
 	//Write data to file:
 	data, err := json.Marshal(conf)
 	if err != nil {
-		return err
+		return
 	}
 	f, err := os.OpenFile(configFile, os.O_WRONLY|os.O_CREATE, 0755)
 	if err != nil {
-		return err
+		return
 	}
 	defer f.Close()
+	f.Truncate(0) //clear existing data in the file
 	_, err = f.Write(data)
-	return err
+	return
 }
 
 func readConfig() (conf config) {
@@ -63,5 +73,10 @@ func readConfig() (conf config) {
 
 func deleteConfig() (err error) {
 	err = os.Remove(configFile)
+	if err != nil {
+		setEvent(CONFIG_DELETE, err.Error(), false)
+		return
+	}
+	setEvent(CONFIG_DELETE, "", true)
 	return
 }

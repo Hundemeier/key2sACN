@@ -8,7 +8,7 @@ function MapItem(props) {
   return (
     <tr>
       <td>{props.map.keyboardID}</td>
-      <td>{props.map.keycode}</td>
+      <td>{props.map.keycode} <small class="text-primary">{keyMap[props.map.keycode]}</small></td>
       <td>{props.map.universe}</td>
       <td>{props.map.channel}</td>
       <td>
@@ -135,7 +135,7 @@ export class KeyCodes extends React.Component {
   }
 }
 
-const keyMap = {
+export const keyMap = {
   "1": "ESC",
   "2": "1",
   "3": "2",

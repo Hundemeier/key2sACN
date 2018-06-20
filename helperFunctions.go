@@ -21,6 +21,6 @@ func checkChannel(channel int) (uint16, error) {
 
 func logErr(err error) {
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 }

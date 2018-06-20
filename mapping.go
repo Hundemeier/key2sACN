@@ -24,8 +24,8 @@ func initMapping(conf config) {
 
 func sendViaMap(event KeyEvent) {
 	key := Key{
-		KeyboardID: event.DeviceID,
-		Key:        event.Code,
+		KeyboardID: event.KeyboardID,
+		Key:        event.KeyCode,
 	}
 	addr := keyMap[key]
 	if event.Value == 1 {

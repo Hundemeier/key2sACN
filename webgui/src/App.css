@@ -13,6 +13,10 @@ body {
   margin: 0.5em;
 }
 
-.list-item-destination {
+.list-item-no-dot {
   list-style-type: none;
+}
+
+.text-console {
+  font-family: "Courier New", Courier, monospace;
 }
