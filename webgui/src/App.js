@@ -1,7 +1,7 @@
 import React from 'react';
 //import logo from './logo.svg';
 import './App.css';
-import './cyborg.css';
+import './cyborg.min.css';
 import Clock from './components/clock';
 import DeviceCard from './components/deviceTable';
 import SacnCard from './components/sACNtable';
