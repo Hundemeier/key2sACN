@@ -1,6 +1,8 @@
 package main
 
 import (
+	"os"
+
 	"github.com/Hundemeier/key2sACN/keylogger"
 )
 
@@ -20,7 +22,10 @@ var keylogs = make([]*keylogger.KeyLogger, 0)
 func initKeylogger(conf config) {
 	//get all devices and then try to start as man y as possible according to the listener list
 	devs, err := keylogger.NewDevices()
-	logErr(err)
+	if err != nil {
+		logErr(err)
+		os.Exit(-1)
+	}
 	for id, listen := range conf.Listening {
 		if listen {
 			for _, dev := range devs {

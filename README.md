@@ -11,7 +11,7 @@ This program does only work on Linux, because only under Linux it is simple enou
 between multiple keyboards. So this tool supports multiple keyboards as different keys.
 
 key2sACN can be configurated via Web-Interface in a normal browser. For more information, see the 
-[wiki](wiki) page.
+[wiki](https://github.com/Hundemeier/key2sACN/wiki) page.
 
 This program is written in go and some compiled binaries are available under [releases](https://github.com/Hundemeier/key2sACN/releases).
 

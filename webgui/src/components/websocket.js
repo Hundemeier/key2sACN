@@ -8,8 +8,8 @@ export default class WebsocketCard extends React.Component {
       eventList: []
     }
 
-    //var socket = new WebSocket("ws://"+window.location.host+"/websocket");
-    var socket = new WebSocket("ws://192.168.1.20:8080/websocket");
+    var socket = new WebSocket("ws://"+window.location.host+"/websocket");
+    //var socket = new WebSocket("ws://192.168.1.20:8080/websocket");
     console.log("created WS");
     socket.onmessage = e => {
       var event = JSON.parse(e.data)

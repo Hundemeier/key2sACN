@@ -24,13 +24,13 @@ class App extends React.Component {
         <Clock />
         <div class="row">
           <SacnCard />
-          <DeviceCard />
-          <ConfigCard />
           <SacnConfig />
+          <DeviceCard />
           <MapCard />
           <MapConfig />
-          <KeyCodes />
           <WebsocketCard />
+          <ConfigCard />
+          <KeyCodes />
         </div>
       </ApolloProvider>
     );
