@@ -41,6 +41,17 @@ export default class WebsocketCard extends React.Component {
         eventList: newList
       })
     }
+    socket.onclose = e => {
+      var newList = this.state.eventList.slice(-4);
+      var newEvent = {
+        Time: new Date(),
+        Data: "Websocket closed!"
+      };
+      newList.push(newEvent);
+      this.setState({
+        eventList: newList
+      })
+    }
   }
 
   render() {

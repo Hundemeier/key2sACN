@@ -59,6 +59,7 @@ func handleWebsocket(w http.ResponseWriter, r *http.Request) {
 					break
 				}
 				logErr(err)
+				break
 			}
 		}
 		last = event
