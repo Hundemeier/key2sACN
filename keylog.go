@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/Hundemeier/key2sACNraspy/keylogger"
+	"github.com/Hundemeier/key2sACN/keylogger"
 )
 
 //KeyEvent is an abstract event for storing the events information

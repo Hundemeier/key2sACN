@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/Hundemeier/key2sACNraspy/keylogger"
+	"github.com/Hundemeier/key2sACN/keylogger"
 	"github.com/graphql-go/graphql"
 )
 
