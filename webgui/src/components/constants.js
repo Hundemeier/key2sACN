@@ -1,1 +1,0 @@
-export const cardWidthREM = 30;
