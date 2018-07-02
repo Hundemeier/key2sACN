@@ -9,7 +9,10 @@ export default new Router({
   routes: [
     {
       path: '/devices',
-      component: Devices
+      component: Devices,
+      props: {
+        autoRefresh: true
+      }
     },
     {
       path: '/sacn',

@@ -6,12 +6,41 @@ import router from './router'
 
 import './cyborg.min.css'
 
+import { ApolloClient } from 'apollo-client'
+import { HttpLink } from 'apollo-link-http'
+import { InMemoryCache } from 'apollo-cache-inmemory'
+import VueApollo from 'vue-apollo'
+
+const httpLink = new HttpLink({
+  // uri: 'http://' + window.location.host + '/graphql'
+  // uri: 'http://192.168.1.20:8080/graphql'
+  uri: '/graphql'
+})
+
+const apolloClient = new ApolloClient({
+  link: httpLink,
+  cache: new InMemoryCache(),
+  connectToDevTools: true
+})
+// store the client global for special use cases
+Vue.prototype.$apolloClient = apolloClient
+
+const apolloProvider = new VueApollo({
+  defaultClient: apolloClient,
+  defaultOptions: {
+    $loadingKey: 'loading'
+  }
+})
+
+Vue.use(VueApollo)
+
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
+  provide: apolloProvider.provide(),
   components: { App },
   template: '<App/>'
 })

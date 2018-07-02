@@ -1,6 +1,6 @@
 <template>
-  <div id="app">
-    <ul class="nav nav-tabs">
+  <div id="app" class="bg-dark">
+    <ul class="nav nav-tabs bg-secondary">
       <li class="nav-item">
         <router-link class="nav-link" :class="{ active: this.$router.currentRoute.path === '/sacn' }" v-bind:to="'/sacn'">sACN</router-link>
       </li>
@@ -20,3 +20,11 @@ export default {
   name: 'App'
 }
 </script>
+
+<style>
+.nav-tabs {
+  padding-top: 1em;
+  padding-left: 1em;
+  margin-bottom: 1em;
+}
+</style>
