@@ -22,6 +22,10 @@
         </tr>
       </tbody>
     </table>
+    <div v-if="error" class="alert alert-danger">
+      Error! Could not load data!<br/>
+      <small>The displayed data could have changed!</small>
+    </div>
   </fieldset>
 </template>
 
@@ -33,13 +37,25 @@ export default {
   name: 'Devices',
   data () {
     return {
-      Devices: []
+      Devices: [],
+      error: false
     }
   },
   apollo: {
     Devices: {
       query: GET_ALL_DEVICES,
-      pollInterval: 1000
+      pollInterval: 1000,
+      manual: true,
+      result ({ data, loading }) {
+        if (!loading) {
+          if (data.Devices === undefined) {
+            this.error = true
+          } else {
+            this.Devices = data.Devices
+            this.error = false
+          }
+        }
+      }
     }
   },
   methods: {

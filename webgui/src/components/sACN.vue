@@ -15,9 +15,7 @@
           <td>{{item.universe}}</td>
           <td>{{item.multicast ? "Yes" : "No"}}</td>
           <td>
-            <ul class="no-points" v-for="dest in item.destinations" :key="dest">
-              <li>{{dest}}</li>
-            </ul>
+            <span v-for="dest in item.destinations" :key="dest">{{dest}}<br/></span>
           </td>
           <td>
             <button class="btn btn-outline-secondary btn-sm full-width" @click="stop(item.universe)">Stop</button>
@@ -39,13 +37,26 @@ export default {
   components: { EditSacn },
   data () {
     return {
-      sACN: []
+      sACN: [],
+      error: false // for holding error state
     }
   },
   apollo: {
     sACN: {
       query: GET_ALL_SACN,
-      pollInterval: 1000
+      pollInterval: 1000,
+      manual: true,
+      result ({ data, loading }) {
+        if (!loading) {
+          if (data.sACN === undefined) {
+            this.error = true
+          } else {
+            var arr = data.sACN.slice()
+            this.sACN = arr.sort((a, b) => a.universe - b.universe)
+            this.error = false
+          }
+        }
+      }
     }
   },
   methods: {
@@ -64,10 +75,6 @@ export default {
 </script>
 
 <style>
-.no-points {
-  list-style-type: none;
-}
-
 .full-width {
   width: 100%;
 }
