@@ -11,7 +11,8 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item in sACN" :key="item.universe">
+        <tr v-for="item in sACN" :key="item.universe" @click="click(item)" :class="{
+          'table-active': selectedItem === null ? false : item.universe === selectedItem.universe}">
           <td>{{item.universe}}</td>
           <td>{{item.multicast ? "Yes" : "No"}}</td>
           <td>
@@ -23,7 +24,10 @@
         </tr>
       </tbody>
     </table>
-    <EditSacn />
+    <EditSacn
+    :universe="selectedItem === null ? 1 : selectedItem.universe"
+    :multicast="selectedItem === null ? false : selectedItem.multicast"
+    :destinations="selectedItem === null ? '' : selectedItem.destinations.join()" />
   </fieldset>
 </template>
 
@@ -38,7 +42,8 @@ export default {
   data () {
     return {
       sACN: [],
-      error: false // for holding error state
+      error: false, // for holding error state
+      selectedItem: null
     }
   },
   apollo: {
@@ -69,6 +74,9 @@ export default {
       }).then(() => {
         this.$apollo.queries.sACN.refetch()
       })
+    },
+    click (item) {
+      this.selectedItem = item
     }
   }
 }
