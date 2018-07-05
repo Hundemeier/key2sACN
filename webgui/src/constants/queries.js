@@ -24,3 +24,7 @@ export const GET_ALL_MAPPING = gql`{
     keyboardID
   }
 }`
+
+export const GET_CONFIG_DIRTY = gql`{
+  keyMapDirty
+}`

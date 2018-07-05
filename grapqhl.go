@@ -115,6 +115,12 @@ func initGraphql() {
 				should be unique at least with keycode and keyboardID.`,
 				Resolve: queryMapping,
 			},
+			"keyMapDirty": &graphql.Field{
+				Type: graphql.Boolean,
+				Description: `Returns true, if the keyMap was modified after the last configuration write.
+				After a configuration was successfully written, this turns to false.`,
+				Resolve: queryKeyMapDirty,
+			},
 		}}
 
 	rootMutation := graphql.NewObject(graphql.ObjectConfig{

@@ -31,7 +31,6 @@
       <div id="mapping" class="col-lg-6 col-xl-4">
         <Mapping />
       </div>
-      <div style="height: 1000px"></div>
     </div>
     <vue-snotify></vue-snotify>
   </div>

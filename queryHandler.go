@@ -53,3 +53,31 @@ func queryMapping(p graphql.ResolveParams) (interface{}, error) {
 	}
 	return list, nil
 }
+
+func queryKeyMapDirty(p graphql.ResolveParams) (interface{}, error) {
+	config := readConfig()
+	//store copy of keyMap
+	keyMap := keyMap
+
+	if len(keyMap) != len(config.KeyMap) {
+		return false, nil
+	}
+	//check content
+	for _, val := range config.KeyMap {
+		//for every item in config.KEyMap check the item in the keyMap
+		//key from keyMap:
+		tmp := Key{Key: val.Keycode, KeyboardID: val.KeyboardID}
+		dmx, ok := keyMap[tmp]
+		if !ok {
+			return false, nil
+		}
+		checkObj := convertToMapType(tmp, dmx)
+		if val.Universe != checkObj.Universe ||
+			val.Channel != checkObj.Channel ||
+			val.Keycode != checkObj.Keycode ||
+			val.KeyboardID != checkObj.KeyboardID {
+			return false, nil
+		}
+	}
+	return true, nil
+}
