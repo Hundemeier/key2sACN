@@ -32,3 +32,11 @@ mutation($universe:Int!,$channel:Int!,$keycode:Int!,$keyboardID:Int!) {
 export const DEL_MAPPING = gql`mutation($keycode:Int!,$keyboardID:Int!) {
   deleteKeyMap(keycode:$keycode, keyboardID:$keyboardID)
 }`
+
+export const DEL_CONFIG = gql`mutation {
+  deleteConfig
+}`
+
+export const SAVE_CONFIG = gql`mutation {
+  writeConfig
+}`

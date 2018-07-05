@@ -1,7 +1,6 @@
 <template>
   <div id="app" class="bg-dark">
     <nav class="navbar navbar-expand-sm navbar-dark bg-dark sticky-top">
-      <a class="navbar-brand" href="#">key2sACN</a>
       <ul class="navbar-nav mr-auto">
         <li class="nav-item">
           <a class="nav-link" href="#devices">Devices</a>
@@ -12,10 +11,15 @@
         <li class="nav-item">
           <a class="nav-link" href="#mapping">Mapping</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#config">Configuration</a>
-        </li>
       </ul>
+      <div class="row align-items-center">
+        <div class="mx-2">
+          <config-btns></config-btns>
+        </div>
+        <div class="mx-2">
+          <clock></clock>
+        </div>
+      </div>
     </nav>
     <div class="row" style="width: 100%">
       <div id="devices" class="col-lg-6 col-xl-4">
@@ -29,6 +33,7 @@
       </div>
       <div style="height: 1000px"></div>
     </div>
+    <vue-snotify></vue-snotify>
   </div>
 </template>
 
@@ -36,13 +41,18 @@
 import Devices from '@/components/Devices'
 import sACN from '@/components/sACN'
 import Mapping from '@/components/Mapping'
+// import AutoPollBtn from '@/components/AutoPollBtn'
+import Clock from '@/components/Clock'
+import ConfigBtns from '@/components/ConfigBtns'
 
 export default {
   name: 'App',
   components: {
     Devices,
     sACN,
-    Mapping
+    Mapping,
+    Clock,
+    ConfigBtns
   }
 }
 </script>
