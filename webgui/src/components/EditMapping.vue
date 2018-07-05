@@ -18,7 +18,7 @@
           <input type="number" class="form-control" name="keyboardID" min="0" max="65535" required v-model="internalHolder.keyboardID">
         </div>
         <div class="col-6">
-          <label for="keycode">Key Code</label>
+          <label for="keycode">Key Code <small class="text-primary">{{keyMap[internalHolder.keycode]}}</small></label>
           <input type="number" class="form-control" name="keycode" min="0" max="65535" required v-model="internalHolder.keycode">
         </div>
       </div>
@@ -29,11 +29,13 @@
 
 <script>
 import { SET_MAPPING } from '@/constants/mutations'
+import { keyMap } from '@/constants/constants'
 
 export default {
   name: 'EditMapping',
   data () {
     return {
+      keyMap: keyMap,
       internalHolder: {
         universe: 1,
         channel: 0,

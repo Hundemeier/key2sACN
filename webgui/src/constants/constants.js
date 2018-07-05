@@ -1,3 +1,4 @@
+export const POLLING = 1000
 
 export const keyMap = {
   '1': 'ESC',
