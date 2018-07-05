@@ -24,6 +24,10 @@
         </tr>
       </tbody>
     </table>
+    <div v-if="error" class="alert alert-danger">
+      Error! Could not load data!<br/>
+      <small>The displayed data could have changed!</small>
+    </div>
     <EditSacn
     :universe="selectedItem === null ? 1 : selectedItem.universe"
     :multicast="selectedItem === null ? false : selectedItem.multicast"

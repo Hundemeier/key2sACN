@@ -18,11 +18,14 @@
       </ul>
     </nav>
     <div class="row" style="width: 100%">
-      <div id="devices" class="col-sm-6 col-xl-4">
+      <div id="devices" class="col-lg-6 col-xl-4">
         <Devices />
       </div>
-      <div id="sacn" class="col-sm-6 col-xl-4">
+      <div id="sacn" class="col-lg-6 col-xl-4">
         <sACN />
+      </div>
+      <div id="mapping" class="col-lg-6 col-xl-4">
+        <Mapping />
       </div>
       <div style="height: 1000px"></div>
     </div>
@@ -32,12 +35,14 @@
 <script>
 import Devices from '@/components/Devices'
 import sACN from '@/components/sACN'
+import Mapping from '@/components/Mapping'
 
 export default {
   name: 'App',
   components: {
     Devices,
-    sACN
+    sACN,
+    Mapping
   }
 }
 </script>

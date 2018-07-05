@@ -15,3 +15,12 @@ export const GET_ALL_SACN = gql`{
     universe
   }
 }`
+
+export const GET_ALL_MAPPING = gql`{
+  Mapping{
+    channel
+    universe
+    keycode
+    keyboardID
+  }
+}`
