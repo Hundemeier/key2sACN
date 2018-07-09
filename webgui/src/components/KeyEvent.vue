@@ -17,8 +17,8 @@ export default {
     }
   },
   mounted: function () {
-    const addr = 'ws://192.168.1.20:8080/websocket'
-    // const addr = 'ws://' + window.location.host + '/websocket'
+    // const addr = 'ws://192.168.1.20:8080/websocket'
+    const addr = 'ws://' + window.location.host + '/websocket'
     console.log('start websocket')
     var ws = new WebSocket(addr)
 

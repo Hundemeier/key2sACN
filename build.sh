@@ -1,6 +1,6 @@
 #!/bin/bash
 #make the assetFS filesystem that includes everything in the webgui/build folder into the executable
-go-bindata-assetfs webgui/build/...
+go-bindata-assetfs webgui/dist/...
 
 GREEN='\033[0;32m'
 NC='\033[0m' # No Color
