@@ -44,9 +44,10 @@ func main() {
 	for _, addr := range addrs {
 		fmt.Printf("\t%v%v\n", addr, server.Addr)
 	}
+	fmt.Println("Close with \033[47;30m Ctrl+C \033[0m")
 	//http.Handle("/", http.FileServer(http.Dir("./webgui/build")))
 	//http.Handle("/", http.FileServer(assetFS()))
-	http.Handle("/", http.FileServer(&assetfs.AssetFS{Asset: Asset, AssetDir: AssetDir, AssetInfo: AssetInfo, Prefix: "webgui/build"}))
+	http.Handle("/", http.FileServer(&assetfs.AssetFS{Asset: Asset, AssetDir: AssetDir, AssetInfo: AssetInfo, Prefix: "webgui/dist"}))
 	http.HandleFunc("/websocket", handleWebsocket)
 	log.Fatal(server.ListenAndServe())
 }

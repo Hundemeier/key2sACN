@@ -1,8 +1,25 @@
 #!/bin/bash
 #make the assetFS filesystem that includes everything in the webgui/build folder into the executable
-go-bindata-assetfs webgui/build/...
+go-bindata-assetfs webgui/dist/...
+
+GREEN='\033[0;32m'
+NC='\033[0m' # No Color
+#TICK='\033[0;32m \xE2\x9C\x93 \033[0m'
+TICK=$GREEN'\xE2\x9C\x93'$NC
 
 # build for following architectures:
-GOOS=linux GOARCH=amd64 go build -o out/key2sACN_amd64
-GOOS=linux GOARCH=386 go build -o out/key2sACN_386
-GOOS=linux GOARCH=arm go build -o out/key2sACN_arm
+printf 'building for...\n'
+printf 'Linux AMD64'
+if GOOS=linux GOARCH=amd64 go build -o out/key2sACN_amd64; then
+  printf ' '$TICK'\n' $TICK
+fi
+
+printf 'Linux 386'
+if GOOS=linux GOARCH=386 go build -o out/key2sACN_386; then
+  printf ' '$TICK'\n' $TICK
+fi
+
+printf 'Linux ARM'
+if GOOS=linux GOARCH=arm go build -o out/key2sACN_arm; then
+  printf ' '$TICK'\n' $TICK
+fi

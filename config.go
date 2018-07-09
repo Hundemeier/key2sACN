@@ -30,20 +30,10 @@ func writeConfig() (err error) {
 		}
 	}()
 
-	//get the sACN outputs that are currently active
-	sACNlist := make([]sACNconf, 0)
-	for _, univ := range trans.GetActivated() {
-		sACN := sACNconf{
-			Universe:     univ,
-			Multicast:    trans.IsMulticast(univ),
-			Destinations: getDestinations(univ),
-		}
-		sACNlist = append(sACNlist, sACN)
-	}
 	conf := config{
 		KeyMap:    getKeyMapAsMapType(),
 		Listening: listening,
-		Outputs:   sACNlist,
+		Outputs:   getSacnCurrentSetup(),
 	}
 	//Write data to file:
 	data, err := json.Marshal(conf)
@@ -79,4 +69,17 @@ func deleteConfig() (err error) {
 	}
 	setEvent(CONFIG_DELETE, "", true)
 	return
+}
+
+func getSacnCurrentSetup() []sACNconf {
+	sACNlist := make([]sACNconf, 0)
+	for _, univ := range trans.GetActivated() {
+		sACN := sACNconf{
+			Universe:     univ,
+			Multicast:    trans.IsMulticast(univ),
+			Destinations: getDestinations(univ),
+		}
+		sACNlist = append(sACNlist, sACN)
+	}
+	return sACNlist
 }

@@ -27,6 +27,12 @@ type deviceType struct {
 	Listening bool
 }
 
+type dirtyType struct {
+	KeyMapDirty    bool
+	SacnDirty      bool
+	ListeningDirty bool
+}
+
 func initGraphql() {
 	deviceType := graphql.NewObject(
 		graphql.ObjectConfig{
@@ -96,6 +102,34 @@ func initGraphql() {
 		},
 	)
 
+	dirtyType := graphql.NewObject(
+		graphql.ObjectConfig{
+			Name: "DirtyState",
+			Description: `DirtyState contains information about wether specific parts of the configuration
+			are dirty or not. Dirty means, there is a difference in the actual setup and the currently
+			saved configuration file "config.json".`,
+			Fields: graphql.Fields{
+				"keyMapDirty": &graphql.Field{
+					Type:        graphql.Boolean,
+					Description: `True, if the current KeyMapping is different form the saved one.`,
+				},
+				"sACNdirty": &graphql.Field{
+					Type: graphql.Boolean,
+					Description: `If the current setup of sACN output is different from the current saved 
+					configuration, this value will be true.`,
+				},
+				"listeningDirty": &graphql.Field{
+					Type: graphql.Boolean,
+					Description: `If the current device listening is different from the saved setup, this 
+					value will be true. Note: when the server restarts, it reads the sored values and tries 
+					to set the listening based on the last saved setup. What will be saved: DeviceID and 
+					listeningState. If the DeviceID is not reachable anymore, nothing will be set. So then
+					the stored values and the current setup are already different.`,
+				},
+			},
+		},
+	)
+
 	rootQuery := graphql.ObjectConfig{
 		Name: "RootQuery",
 		Fields: graphql.Fields{
@@ -114,6 +148,11 @@ func initGraphql() {
 				Description: `A full list of all mapping information currently available. Every entry
 				should be unique at least with keycode and keyboardID.`,
 				Resolve: queryMapping,
+			},
+			"Dirty": &graphql.Field{
+				Type:        dirtyType,
+				Description: `Returns a DirtyState of the current setup on the server.`,
+				Resolve:     queryDirty,
 			},
 		}}
 
