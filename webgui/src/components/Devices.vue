@@ -1,6 +1,7 @@
 <template>
   <fieldset>
     <legend>Devices <small v-if="dirty" class="text-warning">Not saved</small></legend>
+    To receive KeyEvents, the device has to be activated
     <table class="table table-hover" id="devicesTable">
       <thead>
         <tr>

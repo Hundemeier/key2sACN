@@ -1,24 +1,31 @@
 <template>
   <div id="app" class="bg-dark">
     <nav class="navbar navbar-expand-sm navbar-dark bg-dark sticky-top">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item">
-          <a class="nav-link" href="#devices">Devices</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#sacn">sACN</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#mapping">Mapping</a>
-        </li>
-      </ul>
-      <div class="row align-items-center">
-        <div class="mx-2">
-          <config-btns :Dirty="Dirty"></config-btns>
-        </div>
-        <div class="mx-2">
-          <clock></clock>
-        </div>
+      <div class="w-100">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="#devices">Devices</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#sacn">sACN</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#mapping">Mapping</a>
+          </li>
+        </ul>
+      </div>
+      <div class="mx-auto w-50">
+        <key-event></key-event>
+      </div>
+      <div class="navbar w-100">
+        <ul class="navbar-nav ml-auto align-items-center">
+          <li class="nav-item">
+            <config-btns :Dirty="Dirty"></config-btns>
+          </li>
+          <li class="nav-item ml-3">
+            <clock></clock>
+          </li>
+        </ul>
       </div>
     </nav>
     <div class="row" style="width: 100%">
@@ -43,6 +50,7 @@ import Mapping from '@/components/Mapping'
 // import AutoPollBtn from '@/components/AutoPollBtn'
 import Clock from '@/components/Clock'
 import ConfigBtns from '@/components/ConfigBtns'
+import KeyEvent from '@/components/KeyEvent'
 import { GET_CONFIG_DIRTY } from '@/constants/queries'
 
 export default {
@@ -52,7 +60,8 @@ export default {
     sACN,
     Mapping,
     Clock,
-    ConfigBtns
+    ConfigBtns,
+    KeyEvent
   },
   data () {
     return {
