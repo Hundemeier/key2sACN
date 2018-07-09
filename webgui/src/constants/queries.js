@@ -26,5 +26,9 @@ export const GET_ALL_MAPPING = gql`{
 }`
 
 export const GET_CONFIG_DIRTY = gql`{
-  keyMapDirty
+  Dirty{
+    sACNdirty
+    listeningDirty
+    keyMapDirty
+  }
 }`

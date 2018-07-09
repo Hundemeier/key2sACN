@@ -14,7 +14,7 @@
       </ul>
       <div class="row align-items-center">
         <div class="mx-2">
-          <config-btns></config-btns>
+          <config-btns :Dirty="Dirty"></config-btns>
         </div>
         <div class="mx-2">
           <clock></clock>
@@ -23,13 +23,13 @@
     </nav>
     <div class="row" style="width: 100%">
       <div id="devices" class="col-lg-6 col-xl-4">
-        <Devices />
+        <Devices :dirty="Dirty.listeningDirty" />
       </div>
       <div id="sacn" class="col-lg-6 col-xl-4">
-        <sACN />
+        <sACN :dirty="Dirty.sACNdirty" />
       </div>
       <div id="mapping" class="col-lg-6 col-xl-4">
-        <Mapping />
+        <Mapping :dirty="Dirty.keyMapDirty" />
       </div>
     </div>
     <vue-snotify></vue-snotify>
@@ -43,6 +43,7 @@ import Mapping from '@/components/Mapping'
 // import AutoPollBtn from '@/components/AutoPollBtn'
 import Clock from '@/components/Clock'
 import ConfigBtns from '@/components/ConfigBtns'
+import { GET_CONFIG_DIRTY } from '@/constants/queries'
 
 export default {
   name: 'App',
@@ -52,6 +53,21 @@ export default {
     Mapping,
     Clock,
     ConfigBtns
+  },
+  data () {
+    return {
+      Dirty: { // inital values:
+        keyMapDirty: false,
+        listeningDirty: false,
+        sACNdirty: false
+      }
+    }
+  },
+  apollo: {
+    Dirty: {
+      query: GET_CONFIG_DIRTY,
+      pollInterval: 1000
+    }
   }
 }
 </script>

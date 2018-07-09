@@ -1,12 +1,12 @@
 <template>
   <fieldset>
-    <legend>Mapping</legend>
+    <legend>Mapping <small v-if="dirty" class="text-warning">Not saved</small></legend>
     <table class="table table-hover">
       <thead>
         <tr>
-          <th>Device</th>
+          <th>ID</th>
           <th>KeyCode</th>
-          <th>Universe.Channel</th>
+          <th>Univ.Ch</th>
           <th>Change</th>
           <th>Delete</th>
         </tr>
@@ -56,6 +56,12 @@ export default {
         keycode: 0
       },
       error: false
+    }
+  },
+  props: {
+    dirty: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {

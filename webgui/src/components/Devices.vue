@@ -1,6 +1,6 @@
 <template>
   <fieldset>
-    <legend>Devices</legend>
+    <legend>Devices <small v-if="dirty" class="text-warning">Not saved</small></legend>
     <table class="table table-hover" id="devicesTable">
       <thead>
         <tr>
@@ -39,6 +39,12 @@ export default {
     return {
       Devices: [],
       error: false
+    }
+  },
+  props: {
+    dirty: {
+      type: Boolean,
+      default: false
     }
   },
   apollo: {

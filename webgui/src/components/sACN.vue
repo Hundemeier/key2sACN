@@ -1,6 +1,6 @@
 <template>
   <fieldset>
-    <legend>sACN</legend>
+    <legend>sACN <small v-if="dirty" class="text-warning">Not saved</small></legend>
     <table class="table table-hover">
       <thead>
         <tr>
@@ -48,6 +48,12 @@ export default {
       sACN: [],
       error: false, // for holding error state
       selectedItem: null
+    }
+  },
+  props: {
+    dirty: {
+      type: Boolean,
+      default: false
     }
   },
   apollo: {

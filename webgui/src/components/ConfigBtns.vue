@@ -1,7 +1,9 @@
 <template>
   <div>
     <button class="btn btn-sm mx-1"
-    :class="{'btn-outline-success': keyMapDirty, 'btn-outline-warning': !keyMapDirty}"
+    :class="{
+      'btn-outline-success': !Dirty.keyMapDirty && !Dirty.listeningDirty && !Dirty.sACNdirty ,
+      'btn-outline-warning': Dirty.keyMapDirty || Dirty.listeningDirty || Dirty.sACNdirty}"
     @click.prevent="saveConfig">Save Config</button>
     <button class="btn btn-sm btn-outline-danger mx-1" @click.prevent="delConfig">Delete Config</button>
   </div>
@@ -9,15 +11,11 @@
 
 <script>
 import { DEL_CONFIG, SAVE_CONFIG } from '@/constants/mutations'
-import { GET_CONFIG_DIRTY } from '@/constants/queries'
 
 export default {
   name: 'ConfigBtns',
-  apollo: {
-    keyMapDirty: {
-      query: GET_CONFIG_DIRTY,
-      pollInterval: 1000
-    }
+  props: {
+    Dirty: Object
   },
   methods: {
     saveConfig () {
