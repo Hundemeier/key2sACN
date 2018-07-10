@@ -6,13 +6,44 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"os"
+	"os/user"
+	"time"
 
 	assetfs "github.com/elazarl/go-bindata-assetfs"
+
+	evdev "github.com/gvalkov/golang-evdev"
 )
 
 var keyChan = make(chan KeyEvent)
 
 func main() {
+	if err := checkRoot(); err != nil {
+		fmt.Println(err)
+		os.Exit(-1)
+	}
+
+	devices, _ := evdev.ListInputDevices()
+	for _, dev := range devices {
+		fmt.Println(dev)
+		fmt.Println("ID: ", getID(dev))
+	}
+
+	devices[1].Grab()
+	defer devices[1].Release()
+	for {
+		time.Sleep(1 * time.Millisecond)
+		event, err := devices[1].ReadOne()
+		if err != nil {
+			log.Fatal(err)
+		}
+		if event != nil {
+			fmt.Println(event)
+		}
+	}
+
+	os.Exit(0)
+
 	port := flag.Uint("port", 8080, "the port on which the webinterface is listening. Only use port 80, when no other application is using this port!")
 
 	flag.Parse()
@@ -94,4 +125,15 @@ func getMyInterfaceAddr() ([]net.IP, error) {
 	}
 	//only need first
 	return addresses, nil
+}
+
+func checkRoot() error {
+	u, err := user.Current()
+	if err != nil {
+		return err
+	}
+	if u.Uid != "0" {
+		return fmt.Errorf("Error. Are you running as root?")
+	}
+	return nil
 }

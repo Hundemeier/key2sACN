@@ -2,8 +2,12 @@ package main
 
 import (
 	"os"
+	"regexp"
+	"strconv"
 
 	"github.com/Hundemeier/key2sACN/keylogger"
+
+	evdev "github.com/gvalkov/golang-evdev"
 )
 
 //KeyEvent is an abstract event for storing the events information
@@ -18,6 +22,12 @@ type KeyEvent struct {
 var listening = make(map[int]bool)
 
 var keylogs = make([]*keylogger.KeyLogger, 0)
+
+//a set of all devices, that are listend on
+var listenedDevices = make(map[*evdev.InputDevice]struct{})
+
+//flag for init: if we already started a goroutine for listening on devices set the flag to true
+var flagRunning = false
 
 func initKeylogger(conf config) {
 	//get all devices and then try to start as man y as possible according to the listener list
@@ -90,4 +100,17 @@ func deleteKeylogger(logger *keylogger.KeyLogger) {
 			}
 		}
 	}
+}
+
+func getID(device *evdev.InputDevice) int {
+	re := regexp.MustCompile("[0-9]+")
+	numbers := re.FindAllString(device.Fn, 1)
+	if len(numbers) <= 0 {
+		return -1
+	}
+	numInt, err := strconv.Atoi(numbers[0])
+	if err != nil {
+		return -1
+	}
+	return numInt
 }
