@@ -25,7 +25,7 @@ const (
 	CONFIG_DELETE
 )
 
-func setEvent(Type Type, err string, data interface{}) {
+func setWebsocketEvent(Type Type, err string, data interface{}) {
 	new := event
 	new.Type = Type
 	new.Error = err

@@ -23,28 +23,23 @@ var listening = make(map[int]bool)
 
 var keylogs = make([]*keylogger.KeyLogger, 0)
 
-//a set of all devices, that are listend on
-var listenedDevices = make(map[*evdev.InputDevice]struct{})
-
 //flag for init: if we already started a goroutine for listening on devices set the flag to true
 var flagRunning = false
 
 func initKeylogger(conf config) {
-	//get all devices and then try to start as man y as possible according to the listener list
-	devs, err := keylogger.NewDevices()
+	devs, err := evdev.ListInputDevices()
 	if err != nil {
 		logErr(err)
 		os.Exit(-1)
 	}
-	for id, listen := range conf.Listening {
-		if listen {
-			for _, dev := range devs {
-				if dev.Id == id {
-					startKeylogger(dev, keyChan)
-					break
-				}
-			}
-		}
+	for _, device := range devs {
+		//conf.Listening[getID(device)] should be save, because if the id does not exists,
+		//it should return false
+		setListeningDevice(device, conf.Listening[getID(device)])
+	}
+	//only start routine, if we do not have another running
+	if !flagRunning {
+		go listenRoutine()
 	}
 }
 
@@ -69,8 +64,8 @@ func startKeylogger(device *keylogger.InputDevice, ch chan KeyEvent) (err error)
 						KeyCode:    i.Code,
 						Value:      i.Value,
 					}
-					ch <- event
-					setEvent(KEY_EVENT, "", event)
+					keyChan <- event
+					setWebsocketEvent(KEY_EVENT, "", event)
 				}
 			}
 			listening[device.Id] = false
@@ -102,6 +97,33 @@ func deleteKeylogger(logger *keylogger.KeyLogger) {
 	}
 }
 
+func listenRoutine() {
+	flagRunning = true
+	for {
+		//read from all devices, that should be read from
+		for _, dev := range getListeningDevices() {
+			rawEvent, err := dev.ReadOne()
+			if err != nil {
+				setListeningDevice(dev, false)
+				continue
+				//if we encountered an error, stop listening on that device
+			}
+			if rawEvent.Type == evdev.EV_KEY {
+				event := KeyEvent{
+					KeyboardID: getID(dev),
+					KeyCode:    rawEvent.Code,
+					Value:      rawEvent.Value,
+				}
+				keyChan <- event
+				setWebsocketEvent(KEY_EVENT, "", event)
+			}
+		}
+	}
+	flagRunning = false
+}
+
+//getID returns the ID of an inputDevice via the first number in the string.
+//If the ID could not be determined, the return value is -1, otherwise a value >= 0
 func getID(device *evdev.InputDevice) int {
 	re := regexp.MustCompile("[0-9]+")
 	numbers := re.FindAllString(device.Fn, 1)

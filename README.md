@@ -12,5 +12,3 @@ key2sACN can be configurated via Web-Interface in a normal browser. For more inf
 [wiki](https://github.com/Hundemeier/key2sACN/wiki) page.
 
 This program is written in go and some compiled binaries are available under [releases](https://github.com/Hundemeier/key2sACN/releases). Simply download the executable of your choice and execute it.
-
-It uses a modified version of the [keylogger](https://github.com/MarinX/keylogger) by MarinX and this sACN library: [sACN](https://github.com/Hundemeier/go-sacn).

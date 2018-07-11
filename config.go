@@ -24,9 +24,9 @@ func writeConfig() (err error) {
 	//function for reporting an error or success on terminating the function
 	defer func() {
 		if err != nil {
-			setEvent(CONFIG_WROTE, err.Error(), false)
+			setWebsocketEvent(CONFIG_WROTE, err.Error(), false)
 		} else {
-			setEvent(CONFIG_WROTE, "", true)
+			setWebsocketEvent(CONFIG_WROTE, "", true)
 		}
 	}()
 
@@ -64,10 +64,10 @@ func readConfig() (conf config) {
 func deleteConfig() (err error) {
 	err = os.Remove(configFile)
 	if err != nil {
-		setEvent(CONFIG_DELETE, err.Error(), false)
+		setWebsocketEvent(CONFIG_DELETE, err.Error(), false)
 		return
 	}
-	setEvent(CONFIG_DELETE, "", true)
+	setWebsocketEvent(CONFIG_DELETE, "", true)
 	return
 }
 
