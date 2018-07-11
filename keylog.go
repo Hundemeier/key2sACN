@@ -1,11 +1,9 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"regexp"
 	"strconv"
-	"time"
 
 	evdev "github.com/gvalkov/golang-evdev"
 )
@@ -17,9 +15,6 @@ type KeyEvent struct {
 	KeyCode    uint16
 	Value      int32
 }
-
-//flag for init: if we already started a goroutine for listening on devices set the flag to true
-var flagRunning = false
 
 func initKeylogger(conf config) {
 	devs, err := evdev.ListInputDevices()
@@ -36,23 +31,6 @@ func initKeylogger(conf config) {
 			}
 		}
 	}
-	//only start routine, if we do not have another running
-	if !flagRunning {
-		go listenRoutine()
-	}
-}
-
-func listenRoutine() {
-	flagRunning = true
-	for {
-		time.Sleep(1 * time.Millisecond)
-		//read from all devices, that should be read from
-		for _, dev := range getListeningDevices() {
-			fmt.Println("Test", time.Now())
-			listenToDevice(dev)
-		}
-	}
-	flagRunning = false
 }
 
 func listenToDevice(device *evdev.InputDevice) {
@@ -60,23 +38,27 @@ func listenToDevice(device *evdev.InputDevice) {
 		//This is blocking:
 		rawEvents, err := device.Read()
 		if err != nil {
-			/*if os.IsTimeout(err) {
+			if os.IsTimeout(err) {
 				continue // simply do nothing, if we had a tiemout
-			}*/
+			}
 			//if we encountered an error, stop listening on that device
 			//setListeningDevice(device, false)
-			return
+			break
+		}
+		//check if the device should be listened, if not we do not want to send values to the channel
+		if !isListening(device) {
+			break
 		}
 		for _, rawEvent := range rawEvents {
 			//if we had an event, convert it to KEyEvent if possible
 			if event := inputEvent2KeyEvent(rawEvent, device); event != nil {
 				keyChan <- *event
 				setWebsocketEvent(KEY_EVENT, "", event)
-				fmt.Println("Event!", *event)
+				//fmt.Println("Event!", *event)
 			}
 		}
 	}
-	fmt.Println("listenToDevice stopped")
+	//	fmt.Println("listenToDevice stopped")
 }
 
 //getID returns the ID of an inputDevice via the first number in the string.

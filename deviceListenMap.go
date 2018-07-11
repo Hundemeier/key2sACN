@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"sync"
-	"syscall"
 
 	evdev "github.com/gvalkov/golang-evdev"
 )
@@ -29,15 +28,15 @@ func setListeningDevice(device *evdev.InputDevice, listen bool) {
 		listenedDevices.m[device] = struct{}{}
 		//grab a device, if it should be read from
 		device.Grab()
+		go listenToDevice(device)
 	} else if !listen {
 		//delete: search the *devices with the correct id and delete them
 		for dev := range listenedDevices.m {
 			if getID(dev) == getID(device) {
 				dev.Release() //release device
 				delete(listenedDevices.m, dev)
-				dev.File.Close() //close the file, so every i/o is stopped
-				syscall.Close(int(dev.File.Fd()))
-				fmt.Println("setListen sets false")
+				//dev.File.Close() //close the file, so every i/o is stopped
+				//syscall.Close(int(dev.File.Fd()))
 			}
 		}
 	}

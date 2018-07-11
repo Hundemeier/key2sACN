@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"reflect"
 
 	"github.com/graphql-go/graphql"
@@ -20,7 +19,6 @@ func queryDevices(p graphql.ResolveParams) (interface{}, error) {
 			Id:        getID(device),
 			Listening: isListening(device),
 		})
-		fmt.Println("Test", isListening(device))
 	}
 	return list, nil
 }
