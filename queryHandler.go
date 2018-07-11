@@ -1,31 +1,28 @@
 package main
 
 import (
+	"fmt"
 	"reflect"
 
-	"github.com/MarinX/keylogger"
 	"github.com/graphql-go/graphql"
+	evdev "github.com/gvalkov/golang-evdev"
 )
 
 func queryDevices(p graphql.ResolveParams) (interface{}, error) {
-	devs, err := keylogger.NewDevices()
-	list := make([]deviceType, 0)
-	//strip off the " at the beginning and end of the name (cosmetics)
-	for _, val := range devs {
-		name := val.Name
-		if name[0] == '"' {
-			name = name[1:]
-		}
-		if name[len(name)-1] == '"' {
-			name = name[:len(name)-1]
-		}
-		list = append(list, deviceType{
-			Name:      name,
-			Id:        val.Id,
-			Listening: listening[val.Id],
-		})
+	devs, err := evdev.ListInputDevices()
+	if err != nil {
+		return nil, err
 	}
-	return list, err
+	list := make([]deviceType, 0, len(devs))
+	for _, device := range devs {
+		list = append(list, deviceType{
+			Name:      device.Name,
+			Id:        getID(device),
+			Listening: isListening(device),
+		})
+		fmt.Println("Test", isListening(device))
+	}
+	return list, nil
 }
 
 func querySacnOutputs(p graphql.ResolveParams) (interface{}, error) {
@@ -132,7 +129,7 @@ func queryDirty(p graphql.ResolveParams) (interface{}, error) {
 	}
 	//Check Listening:-------------------------------------------
 	listeningConf := config.Listening
-	listeningCurrent := listening
+	listeningCurrent := getListeningID()
 	if !reflect.DeepEqual(listeningConf, listeningCurrent) {
 		retrnVal.ListeningDirty = true
 	}

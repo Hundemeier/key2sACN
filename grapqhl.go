@@ -229,9 +229,11 @@ func initGraphql() {
 				Resolve: mutateDeleteKeyMap,
 			},
 			"setListening": &graphql.Field{
-				Type: deviceType,
+				Type: graphql.Boolean,
 				Description: `set wether to listen on the given device or not. Set the device id and 
-				true to start listening. If the listening was stopped, the return value is null. Stoping may take up to one second.`,
+				true to start listening. If the action was successful the return value is true, 
+				otherwise false and the error may contain more information. 
+				Stoping may take up to one second.`,
 				Args: graphql.FieldConfigArgument{
 					"deviceID": &graphql.ArgumentConfig{
 						Type:        graphql.NewNonNull(graphql.Int),

@@ -1,9 +1,6 @@
 package main
 
 import (
-	"fmt"
-
-	"github.com/Hundemeier/key2sACN/keylogger"
 	"github.com/graphql-go/graphql"
 )
 
@@ -75,30 +72,11 @@ func mutateKeyMap(p graphql.ResolveParams) (interface{}, error) {
 func mutateKeyListener(p graphql.ResolveParams) (interface{}, error) {
 	listen := p.Args["listen"].(bool)
 	deviceID := p.Args["deviceID"].(int)
-	if listen {
-		//get the device with the id
-		devs, err := keylogger.NewDevices()
-		if err != nil {
-			return nil, err
-		}
-		var dev *keylogger.InputDevice
-		for _, val := range devs {
-			if val.Id == deviceID {
-				dev = val
-			}
-		}
-		if dev == nil {
-			return nil, fmt.Errorf("could not find device with id %v", deviceID)
-		}
-		startKeylogger(dev, keyChan)
-		return deviceType{
-			Listening: true,
-			Id:        dev.Id,
-			Name:      dev.Name,
-		}, nil
+	err := setListeningID(deviceID, listen)
+	if err != nil {
+		return false, err
 	}
-	stopKeylogger(deviceID)
-	return nil, nil
+	return true, nil
 }
 
 func mutateWriteConfig(p graphql.ResolveParams) (interface{}, error) {

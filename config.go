@@ -10,7 +10,7 @@ const configFile = "./config.json"
 
 type config struct {
 	KeyMap    []mapType
-	Listening map[int]bool
+	Listening []int
 	Outputs   []sACNconf
 }
 
@@ -32,7 +32,7 @@ func writeConfig() (err error) {
 
 	conf := config{
 		KeyMap:    getKeyMapAsMapType(),
-		Listening: listening,
+		Listening: getListeningID(),
 		Outputs:   getSacnCurrentSetup(),
 	}
 	//Write data to file:
@@ -52,7 +52,7 @@ func writeConfig() (err error) {
 
 func readConfig() (conf config) {
 	conf.KeyMap = make([]mapType, 0)
-	conf.Listening = make(map[int]bool)
+	conf.Listening = make([]int, 0)
 	file, err := ioutil.ReadFile(configFile)
 	if err != nil {
 		return
