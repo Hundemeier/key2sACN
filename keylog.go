@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"regexp"
 	"strconv"
@@ -27,8 +28,6 @@ func initKeylogger(conf config) {
 		os.Exit(-1)
 	}
 	for _, device := range devs {
-		//conf.Listening[getID(device)] should be save, because if the id does not exists,
-		//it should return false
 		//simple search in the conf.Lsitening slice for the id
 		for _, listenID := range conf.Listening {
 			if listenID == getID(device) {
@@ -49,6 +48,7 @@ func listenRoutine() {
 		time.Sleep(1 * time.Millisecond)
 		//read from all devices, that should be read from
 		for _, dev := range getListeningDevices() {
+			fmt.Println("Test", time.Now())
 			listenToDevice(dev)
 		}
 	}
@@ -56,24 +56,27 @@ func listenRoutine() {
 }
 
 func listenToDevice(device *evdev.InputDevice) {
-	//cheaty way to make .Read() non-blocking
-	device.File.SetDeadline(time.Now().Add(1 * time.Millisecond))
-	rawEvents, err := device.Read()
-	if err != nil {
-		if os.IsTimeout(err) {
-			return // simply do nothing, if we had a tiemout
+	for {
+		//This is blocking:
+		rawEvents, err := device.Read()
+		if err != nil {
+			/*if os.IsTimeout(err) {
+				continue // simply do nothing, if we had a tiemout
+			}*/
+			//if we encountered an error, stop listening on that device
+			//setListeningDevice(device, false)
+			return
 		}
-		//if we encountered an error, stop listening on that device
-		setListeningDevice(device, false)
-		return
-	}
-	for _, rawEvent := range rawEvents {
-		//if we had an event, convert it to KEyEvent if possible
-		if event := inputEvent2KeyEvent(rawEvent, device); event != nil {
-			keyChan <- *event
-			setWebsocketEvent(KEY_EVENT, "", event)
+		for _, rawEvent := range rawEvents {
+			//if we had an event, convert it to KEyEvent if possible
+			if event := inputEvent2KeyEvent(rawEvent, device); event != nil {
+				keyChan <- *event
+				setWebsocketEvent(KEY_EVENT, "", event)
+				fmt.Println("Event!", *event)
+			}
 		}
 	}
+	fmt.Println("listenToDevice stopped")
 }
 
 //getID returns the ID of an inputDevice via the first number in the string.

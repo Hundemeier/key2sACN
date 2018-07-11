@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"sync"
+	"syscall"
 
 	evdev "github.com/gvalkov/golang-evdev"
 )
@@ -18,18 +19,27 @@ func setListeningDevice(device *evdev.InputDevice, listen bool) {
 		return
 	}
 
+	//we have to do this here or we have a deadlock because isListening also locks
+	alreadyListening := isListening(device)
+
 	listenedDevices.Lock()
 	defer listenedDevices.Unlock()
 
-	if listen {
-		fmt.Println("Set device to listening", getID(device))
+	if listen && !alreadyListening {
 		listenedDevices.m[device] = struct{}{}
 		//grab a device, if it should be read from
 		device.Grab()
-	} else {
-		delete(listenedDevices.m, device)
-		//release device
-		device.Release()
+	} else if !listen {
+		//delete: search the *devices with the correct id and delete them
+		for dev := range listenedDevices.m {
+			if getID(dev) == getID(device) {
+				dev.Release() //release device
+				delete(listenedDevices.m, dev)
+				dev.File.Close() //close the file, so every i/o is stopped
+				syscall.Close(int(dev.File.Fd()))
+				fmt.Println("setListen sets false")
+			}
+		}
 	}
 }
 
@@ -76,6 +86,9 @@ func getListeningID() []int {
 }
 
 func isListening(device *evdev.InputDevice) bool {
+	if device == nil {
+		return false
+	}
 	listenedDevices.RLock()
 	defer listenedDevices.RUnlock()
 	//search the set
